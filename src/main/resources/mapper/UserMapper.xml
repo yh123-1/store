@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--文件映射路径-->
+<mapper namespace="com.yh.store.mapper.UserMapper">
+    
+<!--    自定义映射规则-->
+<!--    将表的资源和类的属性不一致的字段进行匹配指定-->
+    <resultMap id="UserEntityMap" type="com.yh.store.pojo.User">
+        <id column="uid" property="uid"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="created_user" property="createdUser"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="modified_user" property="modifiedUser"/>
+        <result column="modified_time" property="modifiedTime"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO t_user (
+            username,password,salt,phone,email,gender,avatar,is_delete,
+                created_user,created_time,modified_user,modified_time
+        ) VALUES (
+                  #{username},#{password},#{salt},#{phone},#{email},#{gender},#{avatar},#{isDelete},
+                  #{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime}
+                  )
+    </insert>
+
+    <select id="selectByUserName" resultMap="UserEntityMap">
+        SELECT * FROM t_user
+            where username = #{username}
+    </select>
+
+    <update id="updatePasswordByUid">
+        UPDATE t_user
+        SET
+            password = #{password},
+            modified_user=#{modifiedUser},
+            modified_time=#{modifiedTime}
+        WHERE uid = #{uid}
+    </update>
+    
+    <select id="selectByUid" resultMap="UserEntityMap">
+        SELECT *
+        FROM t_user
+        where uid = #{uid}
+    </select>
+
+    <update id="updateInfoByUid">
+        UPDATE t_user
+        SET
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            modified_use r= #{modifiedUser},
+            modified_time = #{modifiedTime}
+        WHERE uid = #{uid}
+    </update>
+
+    <update id="updateAvatarByUid">
+        UPDATE t_user
+        SET
+        <if test="avatar != null">
+            avatar = #{avatar},
+        </if>
+        modified_user = #{modifiedUser},
+        modified_time = #{modifiedTime}
+        WHERE uid = #{uid}
+    </update>
+</mapper>
